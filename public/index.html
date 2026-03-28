@@ -20,13 +20,14 @@
         .task-info p { font-size: 13px; color: #666; }
         .badge { font-size: 10px; text-transform: uppercase; font-weight: 700; background: #ddd; padding: 2px 6px; border-radius: 4px; }
         .badge-completed { background: #dcfce7; color: #15803d; }
-        .actions { display: flex; gap: 5px; }
-        .action-btn { border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; color: white; }
-        .done-btn { background: #10b981; }
-        .del-btn { background: #ef4444; }
+        .actions { display: flex; gap: 8px; }
+        .action-btn { border: none; padding: 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .done-btn { background: #10b981; color: white; }
+        .del-btn { background: #ef4444; color: white; }
         .pagination { display: flex; justify-content: center; gap: 15px; margin-top: 20px; color: #333; font-weight: 500; }
         .page-btn { background: #f0f2f5; border: 1px solid #ccc; padding: 5px 15px; border-radius: 6px; cursor: pointer; font-size: 14px; }
         .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        svg { width: 16px; height: 16px; fill: currentColor; }
     </style>
 </head>
 <body>
@@ -34,8 +35,8 @@
         <h1>Task Manager</h1>
         
         <div class="input-group">
-            <input type="text" id="title" placeholder="What's on your mind?">
-            <textarea id="description" placeholder="Add some details..." rows="1"></textarea>
+            <input type="text" id="title" placeholder="task">
+            <textarea id="description" placeholder="description(optional)" rows="1"></textarea>
         </div>
 
         <button class="save-btn" onclick="saveTask()">Add Task</button>
@@ -53,7 +54,7 @@
         let p = 1;
 
         async function fetchTasks() {
-            const res = await fetch(`/tasks?page=${p}&limit=10`);
+            const res = await fetch(`/tasks?page=${p}&limit=8`);
             const data = await res.json();
             const list = document.getElementById('tasks');
             list.innerHTML = '';
@@ -67,8 +68,13 @@
                         <p>${task.description || ''}</p>
                     </div>
                     <div class="actions">
-                        ${task.status !== 'completed' ? `<button class="action-btn done-btn" onclick="updateStatus(${task.id}, 'completed')">✓</button>` : ''}
-                        <button class="action-btn del-btn" onclick="deleteTask(${task.id})">✕</button>
+                        ${task.status !== 'completed' ? `
+                        <button class="action-btn done-btn" onclick="updateStatus(${task.id}, 'completed')">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>
+                        </button>` : ''}
+                        <button class="action-btn del-btn" onclick="deleteTask(${task.id})">
+                            <svg viewBox="0 0 24 24"><path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"></path></svg>
+                        </button>
                     </div>
                 `;
                 list.appendChild(item);
@@ -76,7 +82,7 @@
 
             document.getElementById('pageInfo').innerText = `Page ${p}`;
             document.getElementById('prevBtn').disabled = p === 1;
-            document.getElementById('nextBtn').disabled = data.tasks.length < 10;
+            document.getElementById('nextBtn').disabled = data.tasks.length < 8;
         }
 
         function changePage(step) {
