@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 10px; }
+        input, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; padding: 10px; cursor: pointer; width: 100%; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        .task-list { margin-top: 20px; }
+        .task-item { border-bottom: 1px solid #ddd; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .task-item:last-child { border: none; }
+        .task-info { flex: 1; }
+        .status { font-size: 0.8em; color: #666; }
+        .actions button { width: auto; padding: 5px 10px; margin-left: 5px; font-size: 0.8em; }
+        .delete-btn { background: #dc3545; }
+        .complete-btn { background: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>My Tasks</h2>
+        
+        <div class="form-group">
+            <input type="text" id="title" placeholder="Task Title">
+        </div>
+        <div class="form-group">
+            <textarea id="description" placeholder="Task Description"></textarea>
+        </div>
+        <button onclick="addTask()">Add Task</button>
+
+        <div id="tasks" class="task-list"></div>
+    </div>
+
+    <script>
+        async function fetchTasks() {
+            const res = await fetch('/tasks');
+            const data = await res.json();
+            const tasksDiv = document.getElementById('tasks');
+            tasksDiv.innerHTML = '';
+            
+            data.tasks.forEach(task => {
+                const div = document.createElement('div');
+                div.className = 'task-item';
+                div.innerHTML = `
+                    <div class="task-info">
+                        <strong>${task.title}</strong><br>
+                        <small>${task.description || ''}</small><br>
+                        <span class="status">Status: ${task.status}</span>
+                    </div>
+                    <div class="actions">
+                        ${task.status !== 'completed' ? `<button class="complete-btn" onclick="updateStatus(${task.id}, 'completed')">Complete</button>` : ''}
+                        <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                    </div>
+                `;
+                tasksDiv.appendChild(div);
+            });
+        }
+
+        async function addTask() {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            if(!title) return alert("Title required!");
+
+            await fetch('/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, description })
+            });
+
+            document.getElementById('title').value = '';
+            document.getElementById('description').value = '';
+            fetchTasks();
+        }
+
+        async function updateStatus(id, status) {
+            await fetch(`/tasks/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            fetchTasks();
+        }
+
+        async function deleteTask(id) {
+            if(!confirm("Are you sure?")) return;
+            await fetch(`/tasks/${id}`, { method: 'DELETE' });
+            fetchTasks();
+        }
+
+        fetchTasks();
+    </script>
+</body>
+</html>
