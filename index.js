@@ -12,7 +12,7 @@ app.use(express.static('public'));
 app.post('/tasks', async (req, res) => {
     const { title, description } = req.body;
     if (!title) {
-        return res.status(400).json({ error: "Title requiref" });
+        return res.status(400).json({ error: "Title required!" });
     }
     try {
         const [result] = await db.query(
