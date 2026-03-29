@@ -251,7 +251,10 @@
         async function saveTask() {
             const t = document.getElementById('title');
             const d = document.getElementById('description');
-            if (!t.value.trim()) return;
+            if (!t.value.trim()) {
+                alert("Please enter a task!");
+                return;
+            }
 
             await fetch('/tasks', {
                 method: 'POST',

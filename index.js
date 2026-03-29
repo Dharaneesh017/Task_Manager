@@ -12,7 +12,7 @@ app.use(express.static('public'));
 app.post('/tasks', async (req, res) => {
     const { title, description } = req.body;
     if (!title) {
-        return res.status(400).json({ error: "Title is required!" });
+        return res.status(400).json({ error: "Title requiref" });
     }
     try {
         const [result] = await db.query(
@@ -54,7 +54,7 @@ app.put('/tasks/:id', async (req, res) => {
     const { status } = req.body;
     const allowedStatuses = ['pending', 'in-progress', 'completed'];
     if (!status || !allowedStatuses.includes(status)) {
-        return res.status(400).json({ error: "Invalid status provided." });
+        return res.status(400).json({ error: "Invalid status" });
     }
     try {
         const [result] = await db.query(
