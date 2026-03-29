@@ -1,39 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #eef2f7; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .app-card { background: white; width: 100%; max-width: 800px; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        h1 { text-align: center; margin-bottom: 25px; color: #333; font-weight: 600; }
-        .input-group { margin-bottom: 15px; }
-        input, textarea { width: 100%; border: 1px solid #ddd; padding: 12px; border-radius: 10px; font-size: 15px; outline: none; margin-bottom: 10px; }
-        input:focus, textarea:focus { border-color: #6366f1; }
-        .save-btn { background: #6366f1; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; }
-        .task-list { margin-top: 30px; }
-        .task-item { background: #f9fafb; padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .task-info h3 { font-size: 16px; margin-bottom: 4px; }
-        .task-info p { font-size: 13px; color: #666; }
-        .badge { font-size: 10px; text-transform: uppercase; font-weight: 700; background: #ddd; padding: 2px 6px; border-radius: 4px; }
-        .badge-completed { background: #dcfce7; color: #15803d; }
-        .actions { display: flex; gap: 8px; }
-        .action-btn { border: none; padding: 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-        .done-btn { background: #10b981; color: white; }
-        .del-btn { background: #ef4444; color: white; }
-        .pagination { display: flex; justify-content: center; gap: 15px; margin-top: 20px; color: #333; font-weight: 500; }
-        .page-btn { background: #f0f2f5; border: 1px solid #ccc; padding: 5px 15px; border-radius: 6px; cursor: pointer; font-size: 14px; }
-        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        svg { width: 16px; height: 16px; fill: currentColor; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #eef2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-card {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #6366f1;
+        }
+
+        .save-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .task-list {
+            margin-top: 30px;
+        }
+
+        .task-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-info h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .task-info p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .badge {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: #ddd;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .badge-completed {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .done-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .del-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .page-btn {
+            background: #f0f2f5;
+            border: 1px solid #ccc;
+            padding: 5px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+
+        .task-item:hover {
+            border-color: #6366f1;
+            background: #fff;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
     </style>
 </head>
+
 <body>
     <div class="app-card">
         <h1>Task Manager</h1>
-        
+
         <div class="input-group">
             <input type="text" id="title" placeholder="task">
             <textarea id="description" placeholder="description(optional)" rows="1"></textarea>
@@ -47,6 +201,10 @@
             <button id="prevBtn" class="page-btn" onclick="changePage(-1)">Previous</button>
             <span id="pageInfo">Page 1</span>
             <button id="nextBtn" class="page-btn" onclick="changePage(1)">Next</button>
+        </div>
+
+        <div class="footer">
+            Developed by Dharaneesh
         </div>
     </div>
 
@@ -124,4 +282,5 @@
         fetchTasks();
     </script>
 </body>
+
 </html>
