@@ -40,21 +40,43 @@ CREATE TABLE tasks (
 );
 ```
 
-### 5. Start the server
+### 5. Start the server (Option A: Node.js)
    ```bash
    node index.js
    ```
-   The app will be running at `http://localhost:3000`.
 
-## API Endpoints
-- `GET /tasks` - Retrieve a list of tasks.
-- `POST /tasks` - Create a new task.
-- `PUT /tasks/:id` - Update the status of a task.
-- `DELETE /tasks/:id` - Remove a task.
+### 6. Start with Docker (Option B: Recommended)
+   If you have Docker installed, you can start the entire stack (App + MySQL) with a single command:
+   ```bash
+   docker-compose up --build
+   ```
 
-## Example CURL (API Test)
+## API Reference & CURL Commands
+
+### 1. Get All Tasks (Paginated)
+`GET /tasks?page=1&limit=8`
+```bash
+curl -X GET "http://localhost:3000/tasks?page=1&limit=8"
+```
+
+### 2. Create a New Task
+`POST /tasks`
 ```bash
 curl -X POST http://localhost:3000/tasks \
      -H "Content-Type: application/json" \
-     -d '{"title": "Buy cricket bats", "description": "SG, Kookaburra, and Adidas"}'
+     -d '{"title": "Check project requirements", "description": "Ensure everything is correct"}'
+```
+
+### 3. Update Task Status
+`PUT /tasks/:id` (Allowed statuses: `pending`, `in-progress`, `completed`)
+```bash
+curl -X PUT http://localhost:3000/tasks/1 \
+     -H "Content-Type: application/json" \
+     -d '{"status": "completed"}'
+```
+
+### 4. Delete a Task
+`DELETE /tasks/:id`
+```bash
+curl -X DELETE http://localhost:3000/tasks/1
 ```
