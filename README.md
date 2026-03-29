@@ -4,7 +4,7 @@
 - **Full CRUD**: Create, view, update status, and delete tasks.
 - **Web Interface**: Simple UI to manage your tasks easily.
 - **Pagination**: Loads 8 tasks per page.
-- **Authentication**:Implemented with API Key protection.
+- **Authentication**: Implemented with API Key protection.
 
 
 ## Setup Instructions
