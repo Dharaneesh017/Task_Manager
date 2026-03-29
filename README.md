@@ -4,6 +4,7 @@
 - **Full CRUD**: Create, view, update status, and delete tasks.
 - **Web Interface**: Simple UI to manage your tasks easily.
 - **Pagination**: Loads 8 tasks per page.
+- **Authentication**:Implemented with API Key protection.
 
 
 ## Setup Instructions
@@ -40,12 +41,12 @@ CREATE TABLE tasks (
 );
 ```
 
-### 5. Start the server (Option A: Node.js)
+### 5. Start the server (Option A)
    ```bash
    node index.js
    ```
 
-### 6. Start with Docker (Option B: Recommended)
+### 6. Start with Docker (Option B)
    If you have Docker installed, you can start the entire stack (App + MySQL) with a single command:
    ```bash
    docker-compose up --build
@@ -64,7 +65,8 @@ curl -X GET "http://localhost:3000/tasks?page=1&limit=8"
 ```bash
 curl -X POST http://localhost:3000/tasks \
      -H "Content-Type: application/json" \
-     -d '{"title": "Check project requirements", "description": "Ensure everything is correct"}'
+     -H "x-api-key: taskmanager-2026" \
+     -d '{"title": "Buy cricket bats", "description": "SG, Kookaburra, and Adidas"}'
 ```
 
 ### 3. Update Task Status
@@ -72,11 +74,13 @@ curl -X POST http://localhost:3000/tasks \
 ```bash
 curl -X PUT http://localhost:3000/tasks/1 \
      -H "Content-Type: application/json" \
+     -H "x-api-key: taskmanager-2026" \
      -d '{"status": "completed"}'
 ```
 
 ### 4. Delete a Task
 `DELETE /tasks/:id`
 ```bash
-curl -X DELETE http://localhost:3000/tasks/1
+curl -X DELETE http://localhost:3000/tasks/1 \
+     -H "x-api-key: taskmanager-2026"
 ```

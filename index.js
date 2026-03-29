@@ -9,7 +9,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-app.post('/tasks', async (req, res) => {
+const apiAuth = (req, res, next) => {
+    const apiKey = req.headers['x-api-key'];
+    if (apiKey === process.env.API_KEY || apiKey === 'taskmanager-2026') {
+        next();
+    } else {
+        res.status(401).json({ error: "Unauthorized: Missing or invalid API key" });
+    }
+};
+
+app.post('/tasks', apiAuth, async (req, res) => {
     const { title, description } = req.body;
     if (!title) {
         return res.status(400).json({ error: "Title required!" });
@@ -49,7 +58,7 @@ app.get('/tasks', async (req, res) => {
     }
 });
 
-app.put('/tasks/:id', async (req, res) => {
+app.put('/tasks/:id', apiAuth, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     const allowedStatuses = ['pending', 'in-progress', 'completed'];
@@ -73,7 +82,7 @@ app.put('/tasks/:id', async (req, res) => {
     }
 });
 
-app.delete('/tasks/:id', async (req, res) => {
+app.delete('/tasks/:id', apiAuth, async (req, res) => {
     const { id } = req.params;
 
     try {

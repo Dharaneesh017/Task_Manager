@@ -258,7 +258,10 @@
 
             await fetch('/tasks', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-api-key': 'taskmanager-2026'
+                },
                 body: JSON.stringify({ title: t.value, description: d.value })
             });
 
@@ -270,7 +273,10 @@
         async function updateStatus(id, status) {
             await fetch(`/tasks/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-api-key': 'taskmanager-2026'
+                },
                 body: JSON.stringify({ status })
             });
             fetchTasks();
@@ -278,7 +284,10 @@
 
         async function deleteTask(id) {
             if (!confirm('Remove this task?')) return;
-            await fetch(`/tasks/${id}`, { method: 'DELETE' });
+            await fetch(`/tasks/${id}`, { 
+                method: 'DELETE',
+                headers: { 'x-api-key': 'taskmanager-2026' }
+            });
             fetchTasks();
         }
 
